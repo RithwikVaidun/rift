@@ -1312,7 +1312,7 @@ function App() {
 
           dates.push({
             date: d,
-            score: asgn[z].score,
+            score: Number(asgn[z].score),
             total: asgn[z].totalPoints,
           });
         }
@@ -1330,7 +1330,7 @@ function App() {
   let points = 0;
   for (var i = 0; i < dates.length; i++) {
     if (dates[i].score != null) {
-      points += Number(dates[i].score);
+      points += dates[i].score;
       total += dates[i].total;
     }
 
