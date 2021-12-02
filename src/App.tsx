@@ -6,38 +6,45 @@ import {
   ValueAxis,
   Chart,
   LineSeries,
+  Tooltip,
 } from "@devexpress/dx-react-chart-material-ui";
-import { alpha } from "@material-ui/core/styles";
+
+import { EventTracker } from "@devexpress/dx-react-chart";
+
 function App() {
   const [grades, setGrades] = useState(false);
   useEffect(() => {
-    // fetch(
-    //   "https://fremontunifiedca.infinitecampus.org/campus/resources/portal/grades",
-    //   {
-    //     headers: {
-    //       // Connection: "keep-alive",
-    //       // "sec-ch-ua":
-    //       // '" Not A;Brand";v="99", "Chromium";v="96", "Google Chrome";v="96"',
-    //       Accept: "application/json, text/plain, */*",
-    //       // Expires: "0",
-    //       // "Cache-Control": "no-cache",
-    //       // "sec-ch-ua-mobile": "?0",
-    //       // "User-Agent":
-    //       // "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.45 Safari/537.36",
-    //       // "sec-ch-ua-platform": '"Windows"',
-    //       // "Sec-Fetch-Site": "same-origin",
-    //       // "Sec-Fetch-Mode": "cors",
-    //       // "Sec-Fetch-Dest": "empty",
-    //       Referer:
-    //         "https://fremontunifiedca.infinitecampus.org/campus/apps/portal/student/grades",
-    //       "Accept-Language": "en-US,en;q=0.9,es;q=0.8",
-    //       Cookie:
-    //         "_did-603548799=08c09554-c053-4c8f-b905-ffb653761f27; JSESSIONID=EDC353307CC7DA05E3430E7F4AE8DFDD; XSRF-TOKEN=1a0bb64c-ed3f-41f9-8afa-7a735a96056e; tool=; selection=; portalApp=student; portalLang=en; appName=fremont; sis-cookie=!xP52pFe5WYJWPfIuK9LQTj293o8cRjnpFsYVLIm6v9YtOqLRETtsrNt9GeIQgWUOaovI05QpDoHqXes=",
-    //     },
-    //   }
-    // )
-    //   .then((res) => res.json())
-    //   .then((json) => setGrades(json));
+    fetch(
+      "https://fremontunifiedca.infinitecampus.org/campus/resources/portal/grades/detail/71637?showAllTerms=false&selectedTermID=510",
+      {
+        mode: "no-cors",
+        credentials: "same-origin",
+
+        headers: {
+          Connection: "keep-alive",
+          "sec-ch-ua":
+            '" Not A;Brand";v="99", "Chromium";v="96", "Google Chrome";v="96"',
+          Accept: "application/json, text/plain, */*",
+          Expires: "0",
+          "Cache-Control": "no-cache",
+          "sec-ch-ua-mobile": "?0",
+          "User-Agent":
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.45 Safari/537.36",
+          "sec-ch-ua-platform": '"Windows"',
+          // "Sec-Fetch-Site": "same-origin",
+          // "Sec-Fetch-Mode": "cors",
+          "Sec-Fetch-Dest": "empty",
+          Referer:
+            "https://fremontunifiedca.infinitecampus.org/campus/apps/portal/student/classroom/71637/grades?showAllTerms=false&selectedTermID=510",
+          "Accept-Language": "en-US,en;q=0.9,es;q=0.8",
+          Cookie:
+            "_did-603548799=08c09554-c053-4c8f-b905-ffb653761f27; tool=; selection=; portalApp=student; JSESSIONID=D0AF080DF932BA14E163AE375A08351A; XSRF-TOKEN=81b9c260-1530-47f7-b143-76149e197586; portalLang=en; appName=fremont; sis-cookie=!OG/XePjRHWhUK4nSf/2u9QgDYPqI3C/lxNm9visTZ/XPHgxkfALcy7L2H5CxRU02ZozPzKS1eaDmrVM=",
+        },
+      }
+    )
+      .then((res) => res.json())
+      .then((json) => setGrades(json))
+      .catch((err) => console.log("error"));
   }, []);
 
   //FOR POINTS BASED CLASS, NO WEIGHT
@@ -630,11 +637,11 @@ function App() {
             usePercent: false,
             curveID: 6,
             scoreID: 713798,
-            progressScore: "B+",
-            progressPercent: 89.87,
+            progressScore: "B-",
+            progressPercent: 81.53,
             hasDetail: true,
             _model: "PortalGradingTaskModel",
-            _hashCode: "508994284",
+            _hashCode: "1499993557",
             termName: "Q2",
             termSeq: 2,
           },
@@ -664,15 +671,15 @@ function App() {
               usePercent: false,
               curveID: 6,
               scoreID: 713797,
-              progressScore: "B+",
-              progressPercent: 89.87,
-              progressPointsEarned: 222.0,
-              progressTotalPoints: 247.0,
+              progressScore: "B-",
+              progressPercent: 81.53,
+              progressPointsEarned: 234.0,
+              progressTotalPoints: 287.0,
               calculationWeight: 100.0,
               calculationPercent: 1.0,
               hasDetail: true,
               _model: "PortalGradingTaskModel",
-              _hashCode: "193149957",
+              _hashCode: "1173892846",
               termName: "Q2",
               termSeq: 2,
             },
@@ -703,15 +710,15 @@ function App() {
             usePercent: false,
             curveID: 6,
             scoreID: 713797,
-            progressScore: "B+",
-            progressPercent: 89.87,
-            progressPointsEarned: 222.0,
-            progressTotalPoints: 247.0,
+            progressScore: "B-",
+            progressPercent: 81.53,
+            progressPointsEarned: 234.0,
+            progressTotalPoints: 287.0,
             calculationWeight: 100.0,
             calculationPercent: 1.0,
             hasDetail: true,
             _model: "PortalGradingTaskModel",
-            _hashCode: "193149957",
+            _hashCode: "1173892846",
             termName: "Q2",
             termSeq: 2,
           },
@@ -725,6 +732,56 @@ function App() {
               isWeighted: false,
               usePercent: false,
               assignments: [
+                {
+                  objectSectionID: 117002,
+                  parentObjectSectionID: null,
+                  type: 7,
+                  personID: 11295,
+                  taskID: 2,
+                  groupActivityID: 115968,
+                  termID: 510,
+                  assignmentName: "Chapter 7 Essays",
+                  schoolID: 13,
+                  calendarID: 646,
+                  structureID: 646,
+                  sectionID: 71637,
+                  courseID: 21222,
+                  dueDate: "2021-11-30T07:59:00.000Z",
+                  assignedDate: "2021-11-29T08:00:00.000Z",
+                  modifiedDate: "2021-11-29T15:40:00.000Z",
+                  courseName: "AP Hum Geo",
+                  hasMultipleScores: null,
+                  active: true,
+                  scoringType: "p",
+                  score: "12",
+                  scorePoints: "12.0",
+                  scorePercentage: "30.0",
+                  totalPoints: 40,
+                  comments: null,
+                  feedback: null,
+                  late: false,
+                  missing: false,
+                  cheated: false,
+                  dropped: false,
+                  incomplete: false,
+                  turnedIn: false,
+                  wysiwygSubmission: false,
+                  upload: false,
+                  driveSubmission: false,
+                  multiplier: 1.0,
+                  hasStudentHTML: null,
+                  hasTeacherHTML: null,
+                  hasQuiz: null,
+                  hasLTI: null,
+                  hasLTIAcceptsScores: null,
+                  hasFile: null,
+                  hasExternalFile: null,
+                  hasSubmission: null,
+                  hasDiscussion: null,
+                  hasRubric: null,
+                  notGraded: false,
+                  includeCampusLearning: true,
+                },
                 {
                   objectSectionID: 101167,
                   parentObjectSectionID: null,
@@ -880,11 +937,11 @@ function App() {
                 progressID: 181689,
                 scoreID: 713797,
                 groupID: 7410,
-                progressScore: "B+",
-                progressPercent: 89.93,
+                progressScore: "C+",
+                progressPercent: 77.24,
                 progressTrendVal: null,
-                progressPointsEarned: 134.0,
-                progressTotalPoints: 149.0,
+                progressPointsEarned: 146.0,
+                progressTotalPoints: 189.0,
                 termID: 510,
                 taskID: 2,
               },
@@ -1287,22 +1344,18 @@ function App() {
 
   console.log(graph);
 
-  // const datas = [
-  //   { argument: 1, value: 10 },
-  //   { argument: 2, value: 20 },
-  //   { argument: 3, value: 30 },
-  // ];
-
   return (
     <div className="App">
-      <Paper>
+      {/* <Paper>
         <Chart data={graph}>
           <ArgumentAxis />
           <ValueAxis />
 
           <LineSeries valueField="val" argumentField="arg" />
+          <EventTracker />
+          <Tooltip />
         </Chart>
-      </Paper>
+      </Paper> */}
     </div>
   );
 }
