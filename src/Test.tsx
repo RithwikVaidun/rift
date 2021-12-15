@@ -1883,7 +1883,8 @@ function Test() {
     },
   ];
   var dates = [];
-  var cats: { scores: number[]; weight: number }[] = [];
+  var cats: any = [];
+  console.log(cats);
 
   //   for (var tasks = 0; tasks < calcData[0].details.length; tasks++) {
   //   const groups = calcData[0].details[tasks].categories;
@@ -1891,7 +1892,7 @@ function Test() {
 
   if (groups.length > 0) {
     for (var i = 0; i < groups.length; i++) {
-      cats.push({ scores: [], weight: groups[i].weight / 100 });
+      cats.push({ num: 0, den: 0, weight: groups[i].weight / 100 });
 
       var asgn = groups[i].assignments;
 
@@ -1901,7 +1902,8 @@ function Test() {
           dates.push({
             index: i,
             date: d,
-            score: Number(asgn[z].scorePercentage),
+            total: asgn[z].totalPoints,
+            score: Number(asgn[z].score),
             asgn: asgn[z].assignmentName,
           });
         }
@@ -1911,21 +1913,17 @@ function Test() {
   dates.sort(function (a, b) {
     return +new Date(a.date) - +new Date(b.date);
   });
+  console.log(dates);
 
-  function avg(arr: number[]) {
-    var total = 0;
-    for (var i = 0; i < arr.length; i++) {
-      total += arr[i];
-    }
-    return total / arr.length;
-  }
-
-  function calcGrade(index: number, f: number) {
+  //Given an assignment, adds to respective category and calculates grade. Cats is updated
+  function calcGrade(index: number, num: number, den: number) {
     let total = 0;
     let totalWeight = 0;
-    cats[index].scores.push(f);
+    cats[index].num += num;
+    cats[index].den += den;
+    console.log(cats);
     for (var i = 0; i < cats.length; i++) {
-      total += avg(cats[i].scores) * cats[i].weight;
+      total += (cats[i].num / cats[i].den) * cats[i].weight;
       totalWeight += cats[i].weight;
     }
 
@@ -1935,8 +1933,10 @@ function Test() {
   const calc = [];
 
   for (var i = 0; i < dates.length; i++) {
-    var grade = calcGrade(dates[i].index, dates[i].score);
-    console.log(grade);
+    // console.log("iteration: " + i);
+
+    var grade = calcGrade(dates[i].index, dates[i].score, dates[i].total);
+    console.log(dates[i].asgn + ": " + grade.toFixed(1));
 
     calc.push({
       date: dates[i].date.toLocaleDateString(),
@@ -1944,7 +1944,6 @@ function Test() {
       name: " s" + dates[i].asgn,
     });
   }
-  console.log(calc);
 
   return (
     <div className="App">
