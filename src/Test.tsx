@@ -1888,7 +1888,6 @@ function Test() {
   //   for (var tasks = 0; tasks < calcData[0].details.length; tasks++) {
   //   const groups = calcData[0].details[tasks].categories;
   const groups = calcData[0].details[0].categories;
-  console.log(cats);
 
   if (groups.length > 0) {
     for (var i = 0; i < groups.length; i++) {
@@ -1909,13 +1908,9 @@ function Test() {
       }
     }
   }
-  //   }
-
   dates.sort(function (a, b) {
     return +new Date(a.date) - +new Date(b.date);
   });
-  console.log(dates);
-  console.log(cats);
 
   function avg(arr: number[]) {
     var total = 0;
@@ -1929,43 +1924,38 @@ function Test() {
     let total = 0;
     let totalWeight = 0;
     cats[index].scores.push(f);
-    console.log(cats);
     for (var i = 0; i < cats.length; i++) {
       total += avg(cats[i].scores) * cats[i].weight;
       totalWeight += cats[i].weight;
-      //   console.log("total: " + total);
     }
 
     return total / totalWeight;
   }
-  calcGrade(0, 100);
-  console.log(cats);
 
   const calc = [];
 
-  //   for (var i = 0; i < dates.length; i++) {
-  //     console.log("iteration: " + i);
+  for (var i = 0; i < dates.length; i++) {
+    var grade = calcGrade(dates[i].index, dates[i].score);
+    console.log(grade);
 
-  //     var grade = calcGrade(dates[i].index, dates[i].score);
-  //     console.log(dates[i].asgn + ": " + grade.toFixed(1));
-
-  //     calc.push({
-  //       date: dates[i].date.toLocaleDateString(),
-  //       grade: grade.toFixed(2),
-  //       name: " s" + dates[i].asgn,
-  //     });
-  //   }
+    calc.push({
+      date: dates[i].date.toLocaleDateString(),
+      grade: grade.toFixed(2),
+      name: " s" + dates[i].asgn,
+    });
+  }
+  console.log(calc);
 
   return (
     <div className="App">
-      {/* <LineChart width={600} height={300} data={calc}>
+      <LineChart width={600} height={300} data={calc}>
         <Line type="monotone" dataKey="grade" stroke="#8884d8" />
         <Line type="monotone" dataKey="name" stroke="#8884d8" />
         <CartesianGrid stroke="#ccc" />
         <XAxis dataKey="date" />
         <YAxis />
         <Tooltip />
-      </LineChart> */}
+      </LineChart>
     </div>
   );
 }

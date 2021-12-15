@@ -10,17 +10,32 @@ import {
   Tooltip,
 } from "recharts";
 
-import axios from "axios";
+// import axios from "axios";
 
 function App() {
-  const [grades, setGrades] = useState(false);
+  // const [grades, setGrades] = useState(false);
   useEffect(() => {
-    // var url = `https://fremontunifiedca.infinitecampus.org/campus/resources/portal/grades/detail/71637?showAllTerms=false&selectedTermID=510`;
-    // fetch(url, {
-    //   credentials: "same-origin",
-    // }).then((res) => {
-    //   res.json();
-    // });
+    // //   fetch("http://localhost:5000/api", { mode: "no-cors" })
+    // //     .then((res) => {
+    // //       console.log(res.json());
+    // //     })
+    // //     .catch((e) => console.log(e));
+    // fetch("http://localhost:5000/api", {
+    //   method: "POST",
+    //   mode: "no-cors",
+    //   headers: { "Content-Type": "application/json" },
+    // })
+    //   .then((response) => {
+    //     //do something with response
+    //     return response.json();
+    //   })
+    //   .then((text) => {
+    //     console.log("hi");
+    //     console.log(text);
+    //   })
+    //   .catch((err) => {
+    //     throw new Error(err);
+    //   });
   }, []);
 
   //FOR POINTS BASED CLASS, NO WEIGHT
