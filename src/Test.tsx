@@ -1898,7 +1898,6 @@ function Test() {
       for (var z = 0; z < asgn.length; z++) {
         var d = new Date(asgn[z].dueDate.split("T")[0]);
         if (asgn[z].score != null) {
-
           dates.push({
             index: i,
             date: d,
@@ -1910,8 +1909,6 @@ function Test() {
       }
     }
   }
-  //   }
-
   dates.sort(function (a, b) {
     return +new Date(a.date) - +new Date(b.date);
   });
@@ -1924,7 +1921,6 @@ function Test() {
     let totalWeight = 0;
     cats[index].num += num;
     cats[index].den += den;
-    console.log(cats);
     for (var i = 0; i < cats.length; i++) {
       if (cats[i].den != 0) {
         total += (cats[i].num / cats[i].den) * cats[i].weight;
@@ -1937,43 +1933,18 @@ function Test() {
     return total / totalWeight;
   }
 
-
   const calc = [];
 
   for (var i = 0; i < dates.length; i++) {
     var grade = calcGrade(dates[i].index, dates[i].score, dates[i].total);
+
     calc.push({
       date: dates[i].date.toLocaleDateString(),
       grade: grade.toFixed(2),
       name: " s" + dates[i].asgn,
     });
+    console.log(calc);
   }
-
-  // var grade = calcGrade(0, 10, 10);
-  // console.log("grade: " + grade);
-
-  // calc.push({
-  //   date: '9/10/2021',
-  //   grade: grade.toFixed(2),
-  // });
-
-  // var grade1 = calcGrade(1, 91, 100);
-  // console.log("grade: " + grade1);
-
-  // calc.push({
-  //   date: '9/11/2021',
-  //   grade: grade1.toFixed(2),
-  // });   
-
-  // var grade2 = calcGrade(0, 5, 10);
-  // console.log("grade: " + grade2);
-
-  // calc.push({
-  //   date: '9/11/2021',
-  //   grade: grade2.toFixed(2),
-  // });  
-
-  console.log("calc: ", calc)
 
   return (
     <div className="App">
