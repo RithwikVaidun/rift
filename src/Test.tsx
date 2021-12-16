@@ -1884,12 +1884,10 @@ function Test() {
   ];
   var dates = [];
   var cats: any = [];
-  console.log(cats);
 
   //   for (var tasks = 0; tasks < calcData[0].details.length; tasks++) {
   //   const groups = calcData[0].details[tasks].categories;
   const groups = calcData[0].details[0].categories;
-  console.log(cats);
 
   if (groups.length > 0) {
     for (var i = 0; i < groups.length; i++) {
@@ -1900,7 +1898,7 @@ function Test() {
       for (var z = 0; z < asgn.length; z++) {
         var d = new Date(asgn[z].dueDate.split("T")[0]);
         if (asgn[z].score != null) {
-          
+
           dates.push({
             index: i,
             date: d,
@@ -1917,9 +1915,9 @@ function Test() {
   dates.sort(function (a, b) {
     return +new Date(a.date) - +new Date(b.date);
   });
-  console.log(dates);
+  console.log("dates: ", dates);
 
-  
+
   //Given an assignment, adds to respective category and calculates grade. Cats is updated
   function calcGrade(index: number, num: number, den: number) {
     let total = 0;
@@ -1928,28 +1926,54 @@ function Test() {
     cats[index].den += den;
     console.log(cats);
     for (var i = 0; i < cats.length; i++) {
-      total += (cats[i].num / cats[i].den) * cats[i].weight;
-      totalWeight += cats[i].weight;
+      if (cats[i].den != 0) {
+        total += (cats[i].num / cats[i].den) * cats[i].weight;
+        totalWeight += cats[i].weight;
+      }
     }
+    console.log("total: ", total)
+    // console.log("total weight: ",totalWeight)
 
     return total / totalWeight;
   }
-  
+
 
   const calc = [];
 
-    for (var i = 0; i < dates.length; i++) {
-      // console.log("iteration: " + i);
+  for (var i = 0; i < dates.length; i++) {
+    var grade = calcGrade(dates[i].index, dates[i].score, dates[i].total);
+    calc.push({
+      date: dates[i].date.toLocaleDateString(),
+      grade: grade.toFixed(2),
+      name: " s" + dates[i].asgn,
+    });
+  }
 
-      var grade = calcGrade(dates[i].index, dates[i].score, dates[i].total);
-      console.log(dates[i].asgn + ": " + grade.toFixed(1));
+  // var grade = calcGrade(0, 10, 10);
+  // console.log("grade: " + grade);
 
-      calc.push({
-        date: dates[i].date.toLocaleDateString(),
-        grade: grade.toFixed(2),
-        name: " s" + dates[i].asgn,
-      });
-    }
+  // calc.push({
+  //   date: '9/10/2021',
+  //   grade: grade.toFixed(2),
+  // });
+
+  // var grade1 = calcGrade(1, 91, 100);
+  // console.log("grade: " + grade1);
+
+  // calc.push({
+  //   date: '9/11/2021',
+  //   grade: grade1.toFixed(2),
+  // });   
+
+  // var grade2 = calcGrade(0, 5, 10);
+  // console.log("grade: " + grade2);
+
+  // calc.push({
+  //   date: '9/11/2021',
+  //   grade: grade2.toFixed(2),
+  // });  
+
+  console.log("calc: ", calc)
 
   return (
     <div className="App">
