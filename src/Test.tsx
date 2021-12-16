@@ -1884,7 +1884,6 @@ function Test() {
   ];
   var dates = [];
   var cats: any = [];
-  console.log(cats);
 
   //   for (var tasks = 0; tasks < calcData[0].details.length; tasks++) {
   //   const groups = calcData[0].details[tasks].categories;
@@ -1921,7 +1920,6 @@ function Test() {
     let totalWeight = 0;
     cats[index].num += num;
     cats[index].den += den;
-    console.log(cats);
     for (var i = 0; i < cats.length; i++) {
       total += (cats[i].num / cats[i].den) * cats[i].weight;
       totalWeight += cats[i].weight;
@@ -1936,13 +1934,14 @@ function Test() {
     // console.log("iteration: " + i);
 
     var grade = calcGrade(dates[i].index, dates[i].score, dates[i].total);
-    console.log(dates[i].asgn + ": " + grade.toFixed(1));
+    // console.log(dates[i].asgn + ": " + grade.toFixed(1));
 
     calc.push({
       date: dates[i].date.toLocaleDateString(),
       grade: grade.toFixed(2),
       name: " s" + dates[i].asgn,
     });
+    console.log(calc);
   }
 
   return (
