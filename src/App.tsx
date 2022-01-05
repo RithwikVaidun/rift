@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import WeightedGrade from "./WeightedGrade";
 import PointsBased from "./PointsBased";
+import Courses from "./Courses";
 
 import "./App.css";
 import Table from "@mui/material/Table";
@@ -15,6 +16,7 @@ import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
+import { DataGrid, GridColDef } from "@mui/x-data-grid";
 
 function App() {
   // const [grades, setGrades] = useState(false);
@@ -24,8 +26,6 @@ function App() {
     setQuarter(event.target.value as string);
   };
   useEffect(() => {}, []);
-
-  // rows = [{name, grade}{name, grade} ...]
 
   const grades = [
     {
@@ -5431,20 +5431,21 @@ function App() {
   ];
 
   var courses: any = grades[0].terms[Number(quarter)].courses;
-  console.log(courses);
 
   const data = [];
+  var gradeTask = Number(quarter) % 2 == 0 ? 0 : 1;
 
   for (var i = 0; i < courses.length; i++) {
     if (!courses[i].dropped) {
       var grade;
       var score;
-      if (courses[i].gradingTasks[Number(quarter)].percent != null) {
-        grade = courses[i].gradingTasks[Number(quarter)].percent;
-        score = courses[i].gradingTasks[Number(quarter)].score;
+      var curr = courses[i].gradingTasks[gradeTask];
+      if (curr.percent != null) {
+        grade = curr.percent;
+        score = curr.score;
       } else {
-        grade = courses[i].gradingTasks[Number(quarter)].progressPercent;
-        score = courses[i].gradingTasks[Number(quarter)].progressScore;
+        grade = curr.progressPercent;
+        score = curr.progressScore;
       }
       data.push({
         name: courses[i].courseName,
@@ -12807,21 +12808,35 @@ function App() {
     },
   ];
 
-  var assgnData = [];
-  for (var i = 0; i < assignments.length; i++) {
-    assgnData.push({
-      name: assignments[i].assignmentName,
-      date: assignments[i].dueDate,
-      points: assignments[i].scorePoints,
-    });
+  var assgnData = assignments.map((a) => {
+    var d = new Date(a.dueDate.split("T")[0]);
+    return {
+      id: a.assignmentName,
+      class: a.courseName,
+      date: d.toLocaleDateString(),
+      points: a.scorePoints,
+      total: a.totalPoints,
+    };
+  });
+  const columns: GridColDef[] = [
+    { field: "id", headerName: "Name", width: 400 },
+    { field: "class", headerName: "Class", width: 400 },
+    { field: "date", headerName: "Due Date", width: 400 },
+    { field: "points", headerName: "Points", width: 400 },
+    { field: "total", headerName: "Total", width: 400 },
+  ];
+
+  function handleClick(row: any) {
+    console.log(row);
   }
 
   return (
     <div className="App">
       {/* <PointsBased />
       <WeightedGrade /> */}
-      {/* select quarter box */}
-      <Box sx={{ minWidth: 120 }}>
+      <Courses />
+      {/* <h3>Select Quarter</h3> */}
+      {/* <Box sx={{ minWidth: 120 }}>
         <FormControl fullWidth>
           <InputLabel id="demo-simple-select-label">Quarter</InputLabel>
           <Select
@@ -12837,15 +12852,16 @@ function App() {
             <MenuItem value={3}>Q4</MenuItem>
           </Select>
         </FormControl>
-      </Box>
+      </Box> */}
 
-      <TableContainer component={Paper}>
+      {/* <h3>Courses</h3> */}
+
+      {/* <TableContainer component={Paper}>
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
           <TableHead>
             <TableRow>
               <TableCell>Name</TableCell>
               <TableCell>Teacher</TableCell>
-
               <TableCell align="right">Grade</TableCell>
               <TableCell align="right">Score</TableCell>
             </TableRow>
@@ -12853,6 +12869,8 @@ function App() {
           <TableBody>
             {data.map((row) => (
               <TableRow
+                hover
+                onClick={() => handleClick(row)}
                 key={row.name}
                 sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
               >
@@ -12868,34 +12886,19 @@ function App() {
             ))}
           </TableBody>
         </Table>
-      </TableContainer>
+      </TableContainer> */}
 
-      <TableContainer component={Paper}>
-        <Table sx={{ minWidth: 650 }} aria-label="simple table">
-          <TableHead>
-            <TableRow>
-              <TableCell>Name</TableCell>
-              <TableCell>Date</TableCell>
-              <TableCell align="right">Points</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {assgnData.map((row) => (
-              <TableRow
-                key={row.name}
-                sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-              >
-                <TableCell component="th" scope="row">
-                  {row.name}
-                </TableCell>
+      {/* <h3>Assignments</h3>
 
-                <TableCell align="right">{row.date}</TableCell>
-                <TableCell align="right">{row.points}</TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
+      <div style={{ height: 400, width: "100%" }}>
+        <DataGrid
+          rows={assgnData}
+          columns={columns}
+          pageSize={15}
+          rowsPerPageOptions={[5]}
+          checkboxSelection
+        />
+      </div> */}
     </div>
   );
 }
