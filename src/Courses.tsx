@@ -1,22 +1,31 @@
 import React, { useState, useEffect, useRef, useMemo } from "react";
-import WeightedGrade from "./WeightedGrade";
-import PointsBased from "./PointsBased";
 import {
   DataGrid,
-  GridCallbackDetails,
   GridCellEditCommitParams,
+  GridCellParams,
   GridColDef,
-  GridColumns,
-  GridEditRowsModel,
   GridRowModel,
-  GridRowsProp,
-  MuiBaseEvent,
-  MuiEvent,
+  GridSortModel,
 } from "@mui/x-data-grid";
+import {
+  LineChart,
+  Line,
+  CartesianGrid,
+  XAxis,
+  YAxis,
+  Tooltip,
+} from "recharts";
 import Button from "@mui/material/Button";
-import Alert from "@mui/material/Alert";
+import TextField from "@mui/material/TextField";
+import Box from "@mui/material/Box";
+import PointsBased from "./PointsBased";
+import Select, { SelectChangeEvent } from "@mui/material/Select";
+import MenuItem from "@mui/material/MenuItem";
+import InputLabel from "@mui/material/InputLabel";
+import FormControl from "@mui/material/FormControl";
 
 import "./App.css";
+import { ValueType } from "recharts/types/component/DefaultTooltipContent";
 
 function Courses() {
   const data = [
@@ -1471,27 +1480,74 @@ function Courses() {
     },
   ];
 
-  var assgns: any = [];
+  var temp: any = [];
+  var terms = [];
+  const [quarter, setQuarter] = useState("");
+  const [grade, setGrade] = useState("");
 
   for (var tasks = 0; tasks < data[0].details.length; tasks++) {
-    const groups = data[0].details[tasks].categories;
-    if (groups.length > 0) {
-      for (var i = 0; i < groups.length; i++) {
-        var asgn = groups[i].assignments;
-        for (var z = 0; z < asgn.length; z++) {
-          var d = new Date(asgn[z].dueDate.split("T")[0]);
-          if (asgn[z].score != null) {
-            assgns.push({
-              id: asgn[z].assignmentName,
-              date: d,
-              points: Number(asgn[z].score),
-              total: asgn[z].totalPoints,
-            });
-          }
+    const termName =
+      data[0].details[tasks].task.termName +
+      " " +
+      data[0].details[tasks].task.taskName;
+    terms.push(termName);
+  }
+
+  const g = data[0].details[0].categories;
+  const [groups, setGroups] = useState(g);
+  if (groups.length > 0) {
+    for (var i = 0; i < groups.length; i++) {
+      var asgn = groups[i].assignments;
+      for (var z = 0; z < asgn.length; z++) {
+        var d = new Date(asgn[z].dueDate.split("T")[0]);
+        if (asgn[z].score != null) {
+          temp.push({
+            id: asgn[z].assignmentName,
+            date: d,
+            points: Number(asgn[z].score),
+            total: asgn[z].totalPoints,
+          });
         }
       }
     }
   }
+
+  function getAssgns() {}
+  const [assgns, setAssgns] = useState<GridRowModel[]>(temp);
+  const [sortModel, setSortModel] = useState<GridSortModel>([
+    {
+      field: "date",
+      sort: "desc",
+    },
+  ]);
+  const [diff, setDiff] = useState(0);
+  const [form, setForm] = useState({
+    name: "",
+    points: "",
+    total: "",
+  });
+
+  useEffect(() => {
+    setAssgns(temp);
+  }, [groups]);
+
+  const handleChange = (event: SelectChangeEvent) => {
+    setQuarter(event.target.value as string);
+    // setAssgns(getAssgns(Number(event)))
+    setGroups(data[0].details[Number(event.target.value)].categories);
+  };
+
+  useEffect(() => {
+    calcGrade(assgns);
+  }, [assgns]);
+
+  const change = (e: any) => {
+    const value = e.target.value;
+    setForm({
+      ...form,
+      [e.target.name]: value,
+    });
+  };
 
   const c: GridColDef[] = [
     { field: "id", headerName: "Name", width: 400 },
@@ -1511,44 +1567,18 @@ function Courses() {
       editable: true,
       type: "number",
     },
+    {
+      field: "delete",
+      headerName: "Delete",
+      renderCell: () => (
+        <strong>
+          <Button variant="contained" size="small" style={{ marginLeft: 16 }}>
+            Delete
+          </Button>
+        </strong>
+      ),
+    },
   ];
-
-  //   function useApiRef() {
-  //     const apiRef: any = useRef(null);
-  //     const _columns = useMemo(
-  //       () =>
-  //         c.concat({
-  //           field: "__HIDDEN__",
-  //           width: 0,
-  //           renderCell: (params) => {
-  //             apiRef.current = params.api;
-  //             return null;
-  //           },
-  //         }),
-  //       [c]
-  //     );
-
-  //     return { apiRef, columns: _columns };
-  //   }
-
-  //   const { apiRef, columns } = useApiRef();
-  const [grade, setGrade] = React.useState("");
-  const [state, setState] = useState<GridRowModel[]>(assgns);
-
-  const handleCommit = (e: GridCellEditCommitParams) => {
-    const array = state.map((r) => {
-      if (r.id === e.id) {
-        return { ...r, [e.field]: e.value };
-      } else {
-        return { ...r };
-      }
-    });
-    console.log(array);
-    calcGrade(array);
-
-    setState(array);
-    console.log("state: ", state);
-  };
 
   function calcGrade(grades: any) {
     let total = 0;
@@ -1557,23 +1587,128 @@ function Courses() {
       points += value.points;
       total += value.total;
     }
-    console.log(points / total);
+    // console.log(((points / total) * 100).toFixed(2));
+    // console.log(points);
+    // console.log(total);
+
     setGrade(((points / total) * 100).toFixed(2));
   }
-  useEffect(() => {
-    calcGrade(assgns);
-  }, []);
+  const handleCommit = (e: GridCellEditCommitParams) => {
+    const array = assgns.map((r) => {
+      if (r.id === e.id) {
+        return { ...r, [e.field]: e.value };
+      } else {
+        return { ...r };
+      }
+    });
+    setAssgns(array);
+  };
+
+  const handleAddRow = (row: any) => {
+    setAssgns((prevRows) => [
+      ...prevRows,
+      {
+        id: row.name,
+        date: new Date(),
+        points: Number(row.points),
+        total: Number(row.total),
+      },
+    ]);
+    setForm({
+      name: "",
+      points: "",
+      total: "",
+    });
+  };
+  function test() {
+    console.log(groups);
+  }
+
+  //for delete only
+  const handleCellClick = (params: GridCellParams) => {
+    const value = params.colDef.field;
+
+    if (!(value === "delete")) {
+      return;
+    }
+    setAssgns((prevRows) => prevRows.filter((row) => row.id !== params.id));
+  };
 
   return (
     <div className="App">
-      <h2>Calculus</h2>
-      {/* <Button onClick={calcGrade}>Show data</Button> */}
+      <h2>Human Geo</h2>
+      <InputLabel id="demo-simple-select-label">Quarter</InputLabel>
+
+      <Box sx={{ minWidth: 120 }}>
+        <FormControl fullWidth>
+          <InputLabel id="demo-simple-select-label">Quarter</InputLabel>
+          <Select
+            labelId="demo-simple-select-label"
+            id="demo-simple-select"
+            value={quarter}
+            label="Quarter"
+            onChange={handleChange}
+          >
+            {terms.map((term, i) => (
+              <MenuItem value={i}>{term}</MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+      </Box>
+
+      <h3>Add Assignment</h3>
+      <Box
+        component="form"
+        sx={{
+          "& > :not(style)": { m: 1, width: "25ch" },
+        }}
+        noValidate
+        autoComplete="off"
+      >
+        <TextField
+          label="Name"
+          onChange={change}
+          name="name"
+          value={form.name}
+          variant="standard"
+        />
+        <TextField
+          label="Points"
+          onChange={change}
+          name="points"
+          type="number"
+          value={form.points}
+          variant="standard"
+        />
+        <TextField
+          label="Total"
+          type="number"
+          name="total"
+          onChange={change}
+          value={form.total}
+          variant="standard"
+        />
+        <Button onClick={() => handleAddRow(form)}>Add</Button>
+      </Box>
+
+      {/* <Button onClick={test}>Add</Button> */}
+
+      <Button onClick={test}>test</Button>
+
       <h4>Grade: {grade}</h4>
-      {/* <h4> {JSON.stringify(state)}</h4> */}
 
       <div style={{ height: 900, width: "100%" }}>
-        <DataGrid onCellEditCommit={handleCommit} rows={state} columns={c} />
+        <DataGrid
+          sortModel={sortModel}
+          onSortModelChange={(model) => setSortModel(model)}
+          onCellEditCommit={handleCommit}
+          rows={assgns}
+          columns={c}
+          onCellClick={handleCellClick}
+        />
       </div>
+
+      <PointsBased />
     </div>
   );
 }
