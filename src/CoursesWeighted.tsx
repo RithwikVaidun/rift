@@ -2342,8 +2342,8 @@ function CoursesWeighted() {
       },
     ]);
     setForm({
-      name: "",
       category: "",
+      name: "",
       points: "",
       total: "",
     });
@@ -2393,18 +2393,20 @@ function CoursesWeighted() {
         noValidate
         autoComplete="off"
       >
-        <Select
-          labelId="demo-simple-select-label"
-          id="demo-simple-select"
-          value={form.category}
-          label="Category"
-          onChange={handleChange}
-        >
-          {terms.map((term, i) => (
-            <MenuItem value={i}>{term}</MenuItem>
-          ))}
-        </Select>
-
+        <FormControl fullWidth>
+          <InputLabel id="demo-simple-select-label">Quarter</InputLabel>
+          <Select
+            labelId="demo-simple-select-label"
+            id="demo-simple-select"
+            value={form.category}
+            label="Category"
+            onChange={handleChange}
+          >
+            {terms.map((term, i) => (
+              <MenuItem value={i}>{term}</MenuItem>
+            ))}
+          </Select>
+        </FormControl>
         <TextField
           label="Name"
           onChange={change}

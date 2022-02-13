@@ -5433,7 +5433,6 @@ function App() {
     },
   ];
 
-  console.log(Number(quarter));
   var courses: any = grades[0].terms[Number(quarter)].courses;
 
   const data = [];
